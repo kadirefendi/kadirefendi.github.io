@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="./assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="./assets/css/app.css">
+</head>
+<body class="p-5">
+<div id="app">
+    <div class="container">
+     
+        <h2>Products ({{list.length}})</h2>
+        <table class="table table-bordered table-hover">
+
+            <thead>
+                <tr>
+                    <th scope="col">Index</th>
+                    <th scope="col">Photo</th>
+                    <th scope="col">Title</th>
+                    <th scope="col">Price</th>
+                  </tr>
+            </thead>
+            <tr v-if="!list.length">
+                <td>No Record</td>
+            </tr>
+            <tr v-for="item in list">
+                <td> {{item.id}} </td>
+                <td> <img :src="item.photo" style="height: 120px;"> </td>
+                <td> {{item.title}} </td>
+                <td> {{item.price}} </td>
+            </tr>
+        </table>
+    </div>
+</div>
+
+<script src="./assets/js/vue.js"></script>
+<script src="./assets/js/axios.min.js"></script>
+<script>
+    const app = new Vue({
+        el: '#app',
+        name: 'axios Get && Post',
+        data: {
+            formItem: {},
+            list: []
+        },
+        created() {
+            this.getProducts()
+        },
+        methods: {
+            getProducts() {
+                axios.get('http://localhost:3001/products')
+                    .then((res) => {
+                        
+                        this.list = res.data
+                    })
+                    .catch((err) => {
+                        console.log(err)
+                    })
+            },
+            itemSave() {
+                
+                axios.post('http://localhost:3001/products', this.formItem)
+                    .then((res) => {
+                        this.getProducts()
+                    })
+                    .then((res) => {
+                        this.formItem = {}
+                    })
+                    .catch((err) => {
+                        console.log(err)
+                    })
+            }
+           
+        }
+    })
+</script>
+</body>
+</html>
